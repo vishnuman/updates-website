@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Updates - Vishnu and Krishna</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      background: #eee;
+      cursor: pointer;
+    }
+    .tab.active {
+      background: #ccc;
+      font-weight: bold;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    form label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    form input, form textarea {
+      width: 100%;
+      margin-bottom: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    form textarea {
+      resize: vertical;
+      caret-color: auto;
+      cursor: text;
+    }
+    form button {
+      padding: 8px 16px;
+    }
+  </style>
+  <script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+  const supabaseUrl = 'https://yoonqpkzyprkecsnccac.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlvb25xcGt6eXBya2Vjc25jY2FjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3MDE2MjYsImV4cCI6MjA2NjI3NzYyNn0.WS3qQKlMSXWPD-XkTWaBPv59lU54S_IuISJ7d19qjxA';
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const tabs = document.querySelectorAll(".tab");
+    const contents = document.querySelectorAll(".tab-content");
+
+    tabs.forEach((tab, idx) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        contents.forEach(c => c.classList.remove("active"));
+        tab.classList.add("active");
+        contents[idx].classList.add("active");
+      });
+    });
+
+    // Vishnu form
+    const vishnuForm = document.getElementById("vishnu-form");
+    vishnuForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      const date = vishnuForm.querySelector('[name="date"]').value;
+      const link = vishnuForm.querySelector('[name="link"]').value;
+      const comment = vishnuForm.querySelector('[name="comment"]').value;
+
+      const { error } = await supabase.from("vishnu").insert({ date, link, comment });
+      if (error) {
+        console.error("Vishnu insert error:", error.message);
+        alert("Failed to submit for Vishnu.");
+        return;
+      }
+      alert(`Vishnu your response for the date ${date} has been submitted.`);
+      vishnuForm.reset();
+    });
+
+    // Krishna form
+    const krishnaForm = document.getElementById("krishna-form");
+    krishnaForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      const date = krishnaForm.querySelector('[name="date"]').value;
+      const link = krishnaForm.querySelector('[name="link"]').value;
+      const comment = krishnaForm.querySelector('[name="comment"]').value;
+
+      const { error } = await supabase.from("krishna").insert({ date, link, comment });
+      if (error) {
+        console.error("Krishna insert error:", error.message);
+        alert("Failed to submit for Krishna.");
+        return;
+      }
+      alert(`Krishna your response for the date ${date} has been submitted.`);
+      krishnaForm.reset();
+    });
+  });
+</script>
+
+</head>
+<body>
+  <div class="tabs">
+    <div class="tab active">Vishnu</div>
+    <div class="tab">Krishna</div>
+  </div>
+  <div class="tab-content active">
+    <form id="vishnu-form">
+      <label for="vishnu-date">Date</label>
+      <input id="vishnu-date" name="date" type="date" required />
+
+      <label for="vishnu-link">Referral Link (YouTube/GitHub)</label>
+      <input id="vishnu-link" name="link" type="url" required />
+
+      <label for="vishnu-comment">Comment</label>
+      <textarea id="vishnu-comment" name="comment" rows="3" required></textarea>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+  <div class="tab-content">
+    <form id="krishna-form">
+      <label for="krishna-date">Date</label>
+      <input id="krishna-date" name="date" type="date" required />
+
+      <label for="krishna-link">Referral Link (YouTube/GitHub)</label>
+      <input id="krishna-link" name="link" type="url" required />
+
+      <label for="krishna-comment">Comment</label>
+      <textarea id="krishna-comment" name="comment" rows="3" required></textarea>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</body>
+</html>
